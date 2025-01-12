@@ -1,8 +1,11 @@
 "use client";
 
 import { useEditorStore } from "@/features/documents/store/use-editor-store";
+import FontFamily from "@tiptap/extension-font-family";
 import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
+import TextStyle from "@tiptap/extension-text-style";
+import Underline from "@tiptap/extension-underline";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
@@ -42,6 +45,9 @@ export const TiptapEditor = () => {
     },
     extensions: [
       StarterKit,
+      Underline,
+      FontFamily,
+      TextStyle,
       TaskList,
       TaskItem.configure({
         nested: true,

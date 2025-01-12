@@ -17,8 +17,8 @@ export const ToolbarButton = ({
   return (
     <button
       className={cn(
-        "text-sm h-7 min-w-7 flex items-center justify-center rounded-sm hover:bg-neutral-200/80",
-        isActive && "bg-neutral-200/80"
+        "text-sm h-7 min-w-7 flex items-center justify-center rounded-sm hover:bg-neutral-300/80",
+        isActive && "bg-neutral-300/80"
       )}
       onClick={onClick}
     >

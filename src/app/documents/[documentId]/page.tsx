@@ -11,7 +11,7 @@ const DocumentIdPage = async ({ params }: DocumentIdPageProps) => {
   const { documentId } = await params;
   console.log(documentId);
   return (
-    <div className="h-screen bg-gray-100">
+    <div className="h-screen bg-neutral-100">
       <Toolbar />
       <TiptapEditor />
     </div>
