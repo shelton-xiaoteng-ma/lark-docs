@@ -1,5 +1,5 @@
-import { TiptapEditor } from "./tiptap-editor";
-import { Toolbar } from "./toolbar";
+import { TiptapEditor } from "@/features/documents/components/tiptap-editor";
+import { Toolbar } from "@/features/documents/components/toolbar";
 
 interface DocumentIdPageProps {
   params: Promise<{

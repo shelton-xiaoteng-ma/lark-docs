@@ -1,12 +1,38 @@
 "use client";
 
+import { useEditorStore } from "@/features/documents/store/use-editor-store";
 import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
 export const TiptapEditor = () => {
+  const { setEditor } = useEditorStore();
   const editor = useEditor({
+    onCreate: ({ editor }) => {
+      setEditor(editor);
+    },
+    onDestroy: () => {
+      setEditor(null);
+    },
+    onUpdate: ({ editor }) => {
+      setEditor(editor);
+    },
+    onSelectionUpdate: ({ editor }) => {
+      setEditor(editor);
+    },
+    onTransaction: ({ editor }) => {
+      setEditor(editor);
+    },
+    onFocus: ({ editor }) => {
+      setEditor(editor);
+    },
+    onBlur: ({ editor }) => {
+      setEditor(editor);
+    },
+    onContentError: ({ editor }) => {
+      setEditor(editor);
+    },
     editorProps: {
       attributes: {
         style: "padding-left: 56px; padding-right: 56px;",
