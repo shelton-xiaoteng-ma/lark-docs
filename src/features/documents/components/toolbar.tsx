@@ -18,6 +18,8 @@ import {
 import { useEditorStore } from "../store/use-editor-store";
 import { FontFamilyButton } from "./font-family-button";
 import { HeadingLevelButton } from "./heading-level-button";
+import { HighlightColorButton } from "./highlight-color-button";
+import { TextColorButton } from "./text-color-button";
 
 export const Toolbar = () => {
   const { editor } = useEditorStore();
@@ -110,8 +112,8 @@ export const Toolbar = () => {
       {sections[1].map((section) => (
         <ToolbarButton key={section.label} {...section} />
       ))}
-      {/* TODO: Font color */}
-      {/* TODO: Background color */}
+      <TextColorButton />
+      <HighlightColorButton />
       <Separator orientation="vertical" className="h-7 bg-neutral-300" />
       {/* TODO: Link */}
       {/* TODO: Image */}

@@ -1,7 +1,9 @@
 "use client";
 
 import { useEditorStore } from "@/features/documents/store/use-editor-store";
+import { Color } from "@tiptap/extension-color";
 import FontFamily from "@tiptap/extension-font-family";
+import Highlight from "@tiptap/extension-highlight";
 import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
 import TextStyle from "@tiptap/extension-text-style";
@@ -48,6 +50,8 @@ export const TiptapEditor = () => {
       Underline,
       FontFamily,
       TextStyle,
+      Color,
+      Highlight.configure({ multicolor: true }),
       TaskList,
       TaskItem.configure({
         nested: true,
