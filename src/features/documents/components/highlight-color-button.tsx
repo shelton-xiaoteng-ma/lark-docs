@@ -1,7 +1,6 @@
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useEditorStore } from "@/features/documents/store/use-editor-store";
@@ -20,15 +19,13 @@ export const HighlightColorButton = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="px-1 pt-0.5 size-7 hover:bg-neutral-300/80 rounded-md flex flex-col items-center justify-center">
+        <button className="px-1 pt-0.5 h-7 min-w-7 shrink-0 hover:bg-neutral-300/80 rounded-md flex flex-col items-center justify-center">
           <HighlighterIcon className="size-3.5 rounded-md" />
           <div className="w-full h-1" style={{ backgroundColor: value }} />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem>
-          <CirclePicker onChange={onChange} color={value} />
-        </DropdownMenuItem>
+        <CirclePicker onChange={onChange} color={value} />
       </DropdownMenuContent>
     </DropdownMenu>
   );

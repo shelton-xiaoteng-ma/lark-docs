@@ -1,8 +1,7 @@
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { useEditorStore } from "@/features/documents/store/use-editor-store";
 import { CirclePicker, type ColorResult } from "react-color";
@@ -19,15 +18,13 @@ export const TextColorButton = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="px-1 pt-1.5 size-7 flex flex-col items-center bg-neutral-100 hover:bg-neutral-300/80 rounded-md">
+        <button className="px-1 pt-1.5 h-7 min-w-7 shrink-0 flex flex-col items-center bg-neutral-100 hover:bg-neutral-300/80 rounded-md">
           <span className="text-[14px] leading-[14px]">A</span>
           <div className="w-full h-1" style={{ backgroundColor: value }} />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="p-2">
-        <DropdownMenuItem>
-          <CirclePicker onChange={onChange} color={value} />
-        </DropdownMenuItem>
+        <CirclePicker onChange={onChange} color={value} />
       </DropdownMenuContent>
     </DropdownMenu>
   );

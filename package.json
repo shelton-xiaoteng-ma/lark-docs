@@ -41,6 +41,8 @@
     "@tiptap/extension-font-family": "^2.11.2",
     "@tiptap/extension-heading": "^2.11.2",
     "@tiptap/extension-highlight": "^2.11.2",
+    "@tiptap/extension-image": "^2.11.2",
+    "@tiptap/extension-link": "^2.11.2",
     "@tiptap/extension-task-item": "^2.11.2",
     "@tiptap/extension-task-list": "^2.11.2",
     "@tiptap/extension-text-style": "^2.11.2",
@@ -67,6 +69,7 @@
     "sonner": "^1.7.1",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
+    "tiptap-extension-resize-image": "^1.2.1",
     "vaul": "^1.1.2",
     "zod": "^3.24.1",
     "zustand": "^5.0.3"
