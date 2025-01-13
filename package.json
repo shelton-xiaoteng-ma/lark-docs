@@ -38,6 +38,7 @@
     "@radix-ui/react-toggle-group": "^1.1.1",
     "@radix-ui/react-tooltip": "^1.1.6",
     "@tiptap/extension-font-family": "^2.11.2",
+    "@tiptap/extension-heading": "^2.11.2",
     "@tiptap/extension-task-item": "^2.11.2",
     "@tiptap/extension-task-list": "^2.11.2",
     "@tiptap/extension-text-style": "^2.11.2",
