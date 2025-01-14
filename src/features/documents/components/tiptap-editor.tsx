@@ -1,5 +1,6 @@
 "use client";
 
+import { FontSizeExtension } from "@/extensions/font-size";
 import { useEditorStore } from "@/features/documents/store/use-editor-store";
 import { Color } from "@tiptap/extension-color";
 import FontFamily from "@tiptap/extension-font-family";
@@ -53,6 +54,7 @@ export const TiptapEditor = () => {
       StarterKit,
       Underline,
       FontFamily,
+      FontSizeExtension,
       TextStyle,
       Color,
       Highlight.configure({ multicolor: true }),

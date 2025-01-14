@@ -18,6 +18,7 @@ import {
 import { useEditorStore } from "../store/use-editor-store";
 import { AlignButton } from "./align-button";
 import { FontFamilyButton } from "./font-family-button";
+import { FontSizeButton } from "./font-size-button";
 import { HeadingLevelButton } from "./heading-level-button";
 import { HighlightColorButton } from "./highlight-color-button";
 import { ImageButton } from "./image-button";
@@ -113,6 +114,8 @@ export const Toolbar = () => {
       <Separator orientation="vertical" className="h-7 bg-neutral-300" />
       <HeadingLevelButton />
       <Separator orientation="vertical" className="h-7 bg-neutral-300" />
+      <FontSizeButton />
+      <Separator orientation="vertical" className="h-7 bg-neutral-300" />
       {sections[1].map((section) => (
         <ToolbarButton key={section.label} {...section} />
       ))}
@@ -129,7 +132,6 @@ export const Toolbar = () => {
         <ToolbarButton key={section.label} {...section} />
       ))}
       <Separator orientation="vertical" className="h-7 bg-neutral-300" />
-      {/* TODO: Font size */}
       {/* TODO: Formatting */}
       {/* TODO: Alignment */}
       {/* TODO: Indent */}
