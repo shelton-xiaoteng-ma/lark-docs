@@ -5,7 +5,6 @@ import { useEditorStore } from "@/features/documents/store/use-editor-store";
 import { Color } from "@tiptap/extension-color";
 import FontFamily from "@tiptap/extension-font-family";
 import Highlight from "@tiptap/extension-highlight";
-import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
@@ -19,6 +18,7 @@ import ImageResize from "tiptap-extension-resize-image";
 export const TiptapEditor = () => {
   const { setEditor } = useEditorStore();
   const editor = useEditor({
+    immediatelyRender: false,
     onCreate: ({ editor }) => {
       setEditor(editor);
     },
@@ -64,7 +64,7 @@ export const TiptapEditor = () => {
         defaultProtocol: "https",
         protocols: ["http", "https"],
       }),
-      Image,
+      // Image,
       ImageResize,
       TextAlign.configure({
         types: ["heading", "paragraph"],
