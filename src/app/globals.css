@@ -169,6 +169,15 @@ body {
     }
   }
 
+  ul {
+    list-style-type: disc;
+  }
+
+  /* Ordered list styles */
+  ol {
+    list-style-type: decimal;
+  }
+
   /* Task list specific styles */
   ul[data-type="taskList"] {
     list-style: none;

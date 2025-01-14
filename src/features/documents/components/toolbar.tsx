@@ -16,11 +16,13 @@ import {
   Undo2Icon,
 } from "lucide-react";
 import { useEditorStore } from "../store/use-editor-store";
+import { AlignButton } from "./align-button";
 import { FontFamilyButton } from "./font-family-button";
 import { HeadingLevelButton } from "./heading-level-button";
 import { HighlightColorButton } from "./highlight-color-button";
 import { ImageButton } from "./image-button";
 import { LinkButton } from "./link-button";
+import { ListButton } from "./list-button";
 import { TextColorButton } from "./text-color-button";
 
 export const Toolbar = () => {
@@ -119,9 +121,9 @@ export const Toolbar = () => {
       <Separator orientation="vertical" className="h-7 bg-neutral-300" />
       <LinkButton />
       <ImageButton />
-      {/* TODO: Alignment */}
+      <AlignButton />
       {/* TODO: Line height */}
-      {/* TODO: List */}
+      <ListButton />
       <Separator orientation="vertical" className="h-7 bg-neutral-300" />
       {sections[2].map((section) => (
         <ToolbarButton key={section.label} {...section} />
