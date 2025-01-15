@@ -1,11 +1,19 @@
 "use client";
 
 import {
+  AiOutlineInsertRowAbove,
+  AiOutlineInsertRowBelow,
+  AiOutlineInsertRowLeft,
+  AiOutlineInsertRowRight,
+} from "react-icons/ai";
+
+import {
   ArrowRightLeftIcon,
   BoldIcon,
   CircleHelpIcon,
   EyeIcon,
   FileCode2,
+  FileImageIcon,
   FileJson2Icon,
   FilePenIcon,
   FilePlusIcon,
@@ -28,6 +36,7 @@ import {
   TrashIcon,
   UnderlineIcon,
   Undo2Icon,
+  UploadIcon,
 } from "lucide-react";
 
 import {
@@ -42,9 +51,74 @@ import {
   MenubarSubTrigger,
   MenubarTrigger,
 } from "@/components/ui/menubar";
+import { useUploadLocalImage } from "@/features/documents/hooks/use-upload-local-image";
+import { useEditorStore } from "@/features/documents/store/use-editor-store";
+import { useImageModalStore } from "@/features/documents/store/use-image-modal-store";
+import { useState } from "react";
 import { BsFilePdf, BsFullscreen, BsTranslate } from "react-icons/bs";
 
 export const DocumentMenubar = () => {
+  const { editor } = useEditorStore();
+  const [tableRows, setTableRows] = useState(5);
+  const [tableColumns, setTableColumns] = useState(5);
+  const { open: openUploadImageModal } = useImageModalStore();
+  const { onUploadLocalImage } = useUploadLocalImage();
+
+  const insertTable = (rows: number, columns: number) => {
+    editor?.chain().focus().insertTable({ rows, cols: columns }).run();
+  };
+
+  const handleDefaultInsertTable = (
+    event: React.MouseEvent<HTMLDivElement>
+  ) => {
+    event.preventDefault();
+    insertTable(3, 3);
+  };
+
+  const handleCustomInsertTable = () => {
+    insertTable(tableRows, tableColumns);
+    setTableRows(5);
+    setTableColumns(5);
+  };
+
+  const onDownload = (blob: Blob, filename: string) => {
+    const userFilename = prompt("Enter a filename:", filename);
+    if (!userFilename) return;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = userFilename;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const onSaveJSON = () => {
+    if (!editor) return;
+    const content = editor.getJSON();
+    const blob = new Blob([JSON.stringify(content)], {
+      type: "application/json",
+    });
+    onDownload(blob, "document.json");
+  };
+
+  const onSaveHTML = () => {
+    if (!editor) return;
+    const content = editor.getHTML();
+    const blob = new Blob([content], {
+      type: "text/html",
+    });
+    onDownload(blob, "document.html");
+  };
+
+  const onSaveText = () => {
+    if (!editor) return;
+    const content = editor.getText();
+    const blob = new Blob([content], {
+      type: "text/plain",
+    });
+    onDownload(blob, "document.txt");
+  };
+
   return (
     <div className="flex items-center gap-2">
       <Menubar className="border-none bg-transparent shadow-none h-auto p-0 space-x-2">
@@ -52,26 +126,26 @@ export const DocumentMenubar = () => {
           <MenubarTrigger className="text-base font-normal rounded-sm hover:bg-muted h-auto p-1">
             <span>File</span>
           </MenubarTrigger>
-          <MenubarContent>
+          <MenubarContent className="print:hidden">
             <MenubarSub>
               <MenubarSubTrigger>
                 <SaveIcon className="size-4 mr-2" />
                 <span>Save</span>
               </MenubarSubTrigger>
               <MenubarSubContent>
-                <MenubarItem>
+                <MenubarItem onClick={onSaveJSON}>
                   <FileJson2Icon className="size-4 mr-2" />
                   <span>JSON</span>
                 </MenubarItem>
-                <MenubarItem>
+                <MenubarItem onClick={onSaveHTML}>
                   <GlobeIcon className="size-4 mr-2" />
                   <span>HTML</span>
                 </MenubarItem>
-                <MenubarItem>
+                <MenubarItem onClick={() => window.print()}>
                   <BsFilePdf className="size-4 mr-2" />
                   <span>PDF</span>
                 </MenubarItem>
-                <MenubarItem>
+                <MenubarItem onClick={onSaveText}>
                   <FileTextIcon className="size-4 mr-2" />
                   <span>Text</span>
                 </MenubarItem>
@@ -122,12 +196,12 @@ export const DocumentMenubar = () => {
             <span>Edit</span>
           </MenubarTrigger>
           <MenubarContent>
-            <MenubarItem>
+            <MenubarItem onClick={() => editor?.chain().focus().undo().run()}>
               <Undo2Icon className="size-4 mr-2" />
               <span>Undo</span>
               <MenubarShortcut>⌘+Z</MenubarShortcut>
             </MenubarItem>
-            <MenubarItem>
+            <MenubarItem onClick={() => editor?.chain().focus().redo().run()}>
               <Redo2Icon className="size-4 mr-2" />
               <span>Redo</span>
               <MenubarShortcut>⌘+Y</MenubarShortcut>
@@ -145,7 +219,7 @@ export const DocumentMenubar = () => {
                 <span>Table</span>
               </MenubarSubTrigger>
               <MenubarSubContent>
-                <MenubarItem>
+                <MenubarItem onClick={handleDefaultInsertTable}>
                   <span>3 x 3</span>
                 </MenubarItem>
                 <MenubarItem
@@ -156,16 +230,77 @@ export const DocumentMenubar = () => {
                 >
                   <span className="mr-2">Custom: </span>
                   <input
+                    onChange={(event) =>
+                      setTableRows(Number(event.target.value))
+                    }
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        handleCustomInsertTable();
+                      }
+                    }}
+                    value={tableRows}
                     placeholder="5"
                     type="number"
                     className="w-8 border-none outline-none"
                   />
                   <span className="mr-2">x</span>
                   <input
+                    onChange={(event) =>
+                      setTableColumns(Number(event.target.value))
+                    }
+                    value={tableColumns}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        handleCustomInsertTable();
+                      }
+                    }}
                     placeholder="5"
                     type="number"
                     className="w-8 border-none outline-none"
                   />
+                </MenubarItem>
+                <MenubarItem
+                  onClick={() => editor?.chain().focus().addRowBefore().run()}
+                >
+                  <AiOutlineInsertRowAbove className="size-4 mr-2" />
+                  <span>Insert Row Above</span>
+                </MenubarItem>
+                <MenubarItem
+                  onClick={() => editor?.chain().focus().addRowAfter().run()}
+                >
+                  <AiOutlineInsertRowBelow className="size-4 mr-2" />
+                  <span>Insert Row Below</span>
+                </MenubarItem>
+                <MenubarItem
+                  onClick={() =>
+                    editor?.chain().focus().addColumnBefore().run()
+                  }
+                >
+                  <AiOutlineInsertRowLeft className="size-4 mr-2" />
+                  <span>Insert Column Left</span>
+                </MenubarItem>
+                <MenubarItem
+                  onClick={() => editor?.chain().focus().addColumnAfter().run()}
+                >
+                  <AiOutlineInsertRowRight className="size-4 mr-2" />
+                  <span>Insert Column Right</span>
+                </MenubarItem>
+              </MenubarSubContent>
+            </MenubarSub>
+            <MenubarSeparator />
+            <MenubarSub>
+              <MenubarSubTrigger>
+                <FileImageIcon className="size-4 mr-2" />
+                <span>Image</span>
+              </MenubarSubTrigger>
+              <MenubarSubContent>
+                <MenubarItem onClick={onUploadLocalImage}>
+                  <UploadIcon className="size-4 mr-2" />
+                  Upload
+                </MenubarItem>
+                <MenubarItem onClick={openUploadImageModal}>
+                  <SearchIcon className="size-4 mr-2" />
+                  Paste Image URL
                 </MenubarItem>
               </MenubarSubContent>
             </MenubarSub>
@@ -182,22 +317,32 @@ export const DocumentMenubar = () => {
                 <span>Text</span>
               </MenubarSubTrigger>
               <MenubarSubContent>
-                <MenubarItem>
+                <MenubarItem
+                  onClick={() => editor?.chain().focus().toggleBold().run()}
+                >
                   <BoldIcon className="size-4 mr-2" />
                   <span>Bold</span>
                   <MenubarShortcut>⌘+B</MenubarShortcut>
                 </MenubarItem>
-                <MenubarItem>
+                <MenubarItem
+                  onClick={() => editor?.chain().focus().toggleItalic().run()}
+                >
                   <ItalicIcon className="size-4 mr-2" />
                   <span>Italic</span>
                   <MenubarShortcut>⌘+I</MenubarShortcut>
                 </MenubarItem>
-                <MenubarItem>
+                <MenubarItem
+                  onClick={() =>
+                    editor?.chain().focus().toggleUnderline().run()
+                  }
+                >
                   <UnderlineIcon className="size-4 mr-2" />
                   <span>Underline</span>
                   <MenubarShortcut>⌘+U</MenubarShortcut>
                 </MenubarItem>
-                <MenubarItem>
+                <MenubarItem
+                  onClick={() => editor?.chain().focus().toggleStrike().run()}
+                >
                   <StrikethroughIcon className="size-4 mr-2" />
                   <span>Strikethrough</span>
                   <MenubarShortcut>⌘+T</MenubarShortcut>
@@ -205,7 +350,9 @@ export const DocumentMenubar = () => {
               </MenubarSubContent>
             </MenubarSub>
             <MenubarSeparator />
-            <MenubarItem>
+            <MenubarItem
+              onClick={() => editor?.chain().focus().unsetAllMarks().run()}
+            >
               <RemoveFormattingIcon className="size-4 mr-2" />
               <span>Remove Formatting</span>
             </MenubarItem>
