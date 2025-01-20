@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { User2Icon } from "lucide-react";
+import { UserButton } from "@/features/auth/components/user-button";
 import Image from "next/image";
 import Link from "next/link";
 import { SearchInput } from "./search-input";
@@ -15,9 +14,7 @@ export default function Navbar() {
       </div>
       <SearchInput />
       <div className="flex items-center gap-4">
-        <Button variant="outline">
-          <User2Icon className="w-4 h-4" />
-        </Button>
+        <UserButton />
       </div>
     </nav>
   );
