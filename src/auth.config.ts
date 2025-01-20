@@ -1,7 +1,7 @@
 import { db } from "@/db/drizzle";
+import { getUserFromDb } from "@/lib/db";
+import { verifyPassword } from "@/lib/password";
 import { signInSchema } from "@/lib/zod";
-import { getUserFromDb } from "@/utils/db";
-import { saltAndHashPassword } from "@/utils/password";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
@@ -19,16 +19,18 @@ export default {
         let user = null;
 
         const validatedFields = signInSchema.safeParse(credentials);
-
         if (!validatedFields.success) {
           throw new Error("Invalid credentials.");
         }
 
         const { email, password } = validatedFields.data;
-        const pwHash = saltAndHashPassword(password);
-        user = await getUserFromDb(email, pwHash);
-
-        if (!user) {
+        user = await getUserFromDb(email);
+        if (!user || !user.password) {
+          throw new Error("User not found.");
+        }
+        const pwHash = user.password;
+        const isPasswordValid = verifyPassword(password, pwHash);
+        if (!isPasswordValid) {
           throw new Error("Invalid credentials.");
         }
         return user;
@@ -36,20 +38,28 @@ export default {
     }),
   ],
   callbacks: {
-    session: async ({ session, user }) => {
-      session.user.id = user.id;
-      return session;
-    },
     jwt: async ({ token, user }) => {
       if (user) {
         token.id = user.id;
       }
       return token;
     },
+    session: async ({ session, token }) => {
+      if (token.id) {
+        session.user.id = token.id as string;
+      }
+      return session;
+    },
     redirect: async ({ url, baseUrl }) => {
       if (url.startsWith("/")) return `${baseUrl}${url}`;
       return baseUrl;
     },
+    authorized: async ({ auth }) => {
+      return !!auth;
+    },
+  },
+  pages: {
+    signIn: "/sign-in",
   },
   session: {
     strategy: "jwt",
