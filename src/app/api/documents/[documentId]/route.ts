@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { documentId: string } }
+  { params }: { params: Promise<{ documentId: string }> }
 ) {
   const { documentId } = await params;
   const document = await db
@@ -23,7 +23,7 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { documentId: string } }
+  { params }: { params: Promise<{ documentId: string }> }
 ) {
   const { documentId } = await params;
   const { title, initialContent } = await req.json();
@@ -36,7 +36,7 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { documentId: string } }
+  { params }: { params: Promise<{ documentId: string }> }
 ) {
   const { documentId } = await params;
   await db.delete(documents).where(eq(documents.id, documentId));
