@@ -8,7 +8,7 @@ export async function GET(
   req: NextRequest,
   { params }: { params: { documentId: string } }
 ) {
-  const { documentId } = params;
+  const { documentId } = await params;
   const document = await db
     .select()
     .from(documents)
@@ -25,7 +25,7 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: { documentId: string } }
 ) {
-  const { documentId } = params;
+  const { documentId } = await params;
   const { title, initialContent } = await req.json();
   await db
     .update(documents)
@@ -38,7 +38,7 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: { documentId: string } }
 ) {
-  const { documentId } = params;
+  const { documentId } = await params;
   await db.delete(documents).where(eq(documents.id, documentId));
   return NextResponse.json({ message: "Document deleted" });
 }
