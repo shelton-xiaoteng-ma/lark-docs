@@ -8,10 +8,25 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { templates } from "@/constants/templates";
+import { useCreateDocument } from "@/features/documents/hooks/use-create-document";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 export const TemplateGallery = () => {
+  const router = useRouter();
   const isCreating = false;
+  const { createDocument } = useCreateDocument();
+
+  const handleCreateDocument = async (template: {
+    label: string;
+    initialContent: string;
+  }) => {
+    const document = await createDocument({
+      title: template.label + " - " + new Date().toISOString(),
+      initialContent: template.initialContent,
+    });
+    router.push(`/documents/${document.id}`);
+  };
 
   return (
     <div className="bg-gray-100">
@@ -32,7 +47,12 @@ export const TemplateGallery = () => {
                 >
                   <button
                     disabled={isCreating}
-                    onClick={() => {}}
+                    onClick={() => {
+                      handleCreateDocument({
+                        label,
+                        initialContent: "",
+                      });
+                    }}
                     className={`flex flex-col items-center justify-center bg-cover bg-center bg-no-repeat size-full hover:border-blue-500 hover:bg-blue-500/10`}
                     style={{
                       backgroundImage: `url(${imageUrl})`,

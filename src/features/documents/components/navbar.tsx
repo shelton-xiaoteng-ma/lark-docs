@@ -1,3 +1,4 @@
+import { UserButton } from "@/features/auth/components/user-button";
 import Image from "next/image";
 import Link from "next/link";
 import { DocumentInput } from "./document-input";
@@ -14,6 +15,9 @@ export const Navbar = () => {
           <DocumentInput />
           <DocumentMenubar />
         </div>
+      </div>
+      <div className="mr-4">
+        <UserButton />
       </div>
     </nav>
   );
