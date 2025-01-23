@@ -7,7 +7,7 @@ export const templates = [
   {
     id: "resume",
     label: "Resume",
-    imageUrl: "/templates/Resume.png",
+    imageUrl: "/templates/resume.png",
   },
   {
     id: "cover-letter",
