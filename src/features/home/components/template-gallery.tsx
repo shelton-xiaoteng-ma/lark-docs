@@ -8,6 +8,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { templates } from "@/constants/templates";
+import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
 import { useCreateDocument } from "@/features/documents/hooks/use-create-document";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
@@ -15,17 +16,29 @@ import { useRouter } from "next/navigation";
 export const TemplateGallery = () => {
   const router = useRouter();
   const isCreating = false;
+  const { user } = useCurrentUser();
   const { createDocument } = useCreateDocument();
 
   const handleCreateDocument = async (template: {
     label: string;
     initialContent: string;
   }) => {
-    const document = await createDocument({
-      title: template.label + " - " + new Date().toISOString(),
-      initialContent: template.initialContent,
-    });
-    router.push(`/documents/${document.id}`);
+    if (user?.id) {
+      await createDocument(
+        {
+          title: template.label + " - " + new Date().toISOString(),
+          initialContent: template.initialContent,
+          ownerId: user?.id,
+        },
+        {
+          onSuccess(document) {
+            router.push(`/documents/${document.id}`);
+          },
+        }
+      );
+    } else {
+      console.error("User not found");
+    }
   };
 
   return (

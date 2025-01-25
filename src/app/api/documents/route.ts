@@ -27,10 +27,10 @@ export async function POST(req: NextRequest) {
   if (!session?.user?.id) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
-  const { title, initialContent } = await req.json();
+  const { title, initialContent, ownerId } = await req.json();
   const result = await db
     .insert(documents)
-    .values({ title, initialContent, ownerId: session?.user?.id })
+    .values({ title, initialContent, ownerId: ownerId })
     .returning();
   const insertedDocument = result.length > 0 ? result[0] : null;
   return NextResponse.json(
