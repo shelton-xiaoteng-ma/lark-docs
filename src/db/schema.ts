@@ -119,4 +119,11 @@ export const documents = pgTable("document", {
   organizationId: text("organization_id").references(() => organizations.id, {
     onDelete: "cascade",
   }),
+  createdAt: timestamp("created_at", { mode: "date" })
+    .$defaultFn(() => new Date())
+    .notNull(),
+  updatedAt: timestamp("updated_at", { mode: "date" })
+    .$defaultFn(() => new Date())
+    .$onUpdateFn(() => new Date())
+    .notNull(),
 });
