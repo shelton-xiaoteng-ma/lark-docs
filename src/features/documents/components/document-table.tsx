@@ -13,16 +13,32 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatDistanceToNow } from "date-fns";
+import { differenceInDays, format, formatDistanceToNow } from "date-fns";
 import { MoreVerticalIcon } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import { toast } from "sonner";
+import { useDeleteDocument } from "../hooks/use-delete-document";
 import { DocumentData } from "../types";
+import { RemoveDialog } from "./remove-dialog";
 
 interface DocumentTableProps {
   documents: DocumentData[];
 }
 
 export const DocumentTable = ({ documents }: DocumentTableProps) => {
+  const { deleteDocument } = useDeleteDocument();
+
+  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
+
+  const handleDeleteDocument = (documentId: string) => {
+    deleteDocument(documentId, {
+      onSuccess: (document) => {
+        toast.success(`Document ${document.title} has been deleted`);
+      },
+    });
+  };
+
   return (
     <Table>
       <TableHeader>
@@ -36,19 +52,35 @@ export const DocumentTable = ({ documents }: DocumentTableProps) => {
       <TableBody>
         {documents?.map((document: DocumentData) => (
           <TableRow key={document.id}>
-            <TableCell>{document.title}</TableCell>
             <TableCell>
-              {formatDistanceToNow(new Date(document.createdAt), {
-                addSuffix: true,
-              })}
+              <Link href={`/documents/${document.id}`}>{document.title}</Link>
             </TableCell>
             <TableCell>
-              {formatDistanceToNow(new Date(document.updatedAt), {
-                addSuffix: true,
-              })}
+              {(() => {
+                const date = new Date(document.createdAt);
+                return differenceInDays(new Date(), date) > 3
+                  ? format(date, "MMM dd, yyyy")
+                  : formatDistanceToNow(date, { addSuffix: true });
+              })()}
             </TableCell>
             <TableCell>
-              <DropdownMenu>
+              {(() => {
+                const date = new Date(document.updatedAt);
+                return differenceInDays(new Date(), date) > 3
+                  ? format(date, "MMM dd, yyyy")
+                  : formatDistanceToNow(date, { addSuffix: true });
+              })()}
+            </TableCell>
+            <TableCell>
+              <DropdownMenu
+                open={openMenus[document.id]}
+                onOpenChange={(open) =>
+                  setOpenMenus((prev) => ({
+                    ...prev,
+                    [document.id]: open,
+                  }))
+                }
+              >
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="h-auto p-2">
                     <MoreVerticalIcon className="size-4" />
@@ -56,15 +88,40 @@ export const DocumentTable = ({ documents }: DocumentTableProps) => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem>
-                    <Link href={`/documents/${document.id}`}>View</Link>
+                    <Button variant="ghost" size="icon">
+                      <Link
+                        href={`/documents/${document.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View
+                      </Link>
+                    </Button>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    <Link href={`/documents/${document.id}/edit`}>Edit</Link>
+                    <Button variant="ghost" size="icon">
+                      <Link
+                        href={`/documents/${document.id}/edit`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Edit
+                      </Link>
+                    </Button>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link href={`/documents/${document.id}/delete`}>
-                      Delete
-                    </Link>
+                  <DropdownMenuItem
+                    onClick={(e) => e.preventDefault()}
+                    className="cursor-pointer"
+                  >
+                    <RemoveDialog
+                      onConfirm={() => handleDeleteDocument(document.id)}
+                      onCancel={() =>
+                        setOpenMenus((prev) => ({
+                          ...prev,
+                          [document.id]: false,
+                        }))
+                      }
+                    />
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

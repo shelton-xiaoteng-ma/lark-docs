@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { mutate } from "swr";
-import { CreateDocumentData, DocumentData } from "../types";
+import { DocumentData } from "../types";
 
 type Options = {
   onSuccess?: (data: DocumentData) => void;
@@ -8,24 +8,16 @@ type Options = {
   onSettled?: () => void;
 };
 
-export const useCreateDocument = () => {
+export const useDeleteDocument = () => {
   const [status, setStatus] = useState<
     "success" | "error" | "settled" | "pending" | null
   >(null);
 
-  const createDocument = async (
-    data: CreateDocumentData,
-    options?: Options
-  ) => {
+  const deleteDocument = async (documentId: string, options?: Options) => {
     try {
       setStatus("pending");
-      // Send POST request to create a document
-      const response = await fetch("/api/documents", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+      const response = await fetch(`/api/documents/${documentId}`, {
+        method: "DELETE",
       });
 
       if (!response.ok) {
@@ -53,5 +45,5 @@ export const useCreateDocument = () => {
       options?.onSettled?.();
     }
   };
-  return { createDocument, status };
+  return { deleteDocument, status };
 };

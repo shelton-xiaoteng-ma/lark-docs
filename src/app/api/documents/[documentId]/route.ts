@@ -39,6 +39,16 @@ export async function DELETE(
   { params }: { params: Promise<{ documentId: string }> }
 ) {
   const { documentId } = await params;
-  await db.delete(documents).where(eq(documents.id, documentId));
-  return NextResponse.json({ message: "Document deleted" });
+  const deletedDocument = await db
+    .delete(documents)
+    .where(eq(documents.id, documentId))
+    .returning();
+  if (deletedDocument.length === 0) {
+    return NextResponse.json({ error: "Document not found" }, { status: 404 });
+  } else {
+    return NextResponse.json({
+      message: "Document deleted",
+      document: deletedDocument[0],
+    });
+  }
 }
