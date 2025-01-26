@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
   const page = req.nextUrl.searchParams.get("page");
-  const pageSize = req.nextUrl.searchParams.get("pagesize");
+  const pageSize = req.nextUrl.searchParams.get("pageSize");
   const pageNumber = page ? Number(page) : 1;
   const pageSizeNumber = pageSize ? Number(pageSize) : 10;
   const sort = req.nextUrl.searchParams.get("sort");

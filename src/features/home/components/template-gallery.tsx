@@ -12,18 +12,20 @@ import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
 import { useCreateDocument } from "@/features/documents/hooks/use-create-document";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export const TemplateGallery = () => {
   const router = useRouter();
-  const isCreating = false;
   const { user } = useCurrentUser();
   const { createDocument } = useCreateDocument();
+  const [isCreating, setIsCreating] = useState(false);
 
   const handleCreateDocument = async (template: {
     label: string;
     initialContent: string;
   }) => {
     if (user?.id) {
+      setIsCreating(true);
       await createDocument(
         {
           title: template.label + " - " + new Date().toISOString(),
@@ -33,6 +35,9 @@ export const TemplateGallery = () => {
         {
           onSuccess(document) {
             router.push(`/documents/${document.id}`);
+          },
+          onSettled() {
+            setIsCreating(false);
           },
         }
       );

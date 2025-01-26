@@ -1,3 +1,4 @@
+import { ListDocuments } from "@/features/documents/components/list-documents";
 import Navbar from "@/features/home/components/navbar";
 import { TemplateGallery } from "@/features/home/components/template-gallery";
 
@@ -9,6 +10,7 @@ export default function Home() {
       </div>
       <div className="py-4 mt-20 w-full">
         <TemplateGallery />
+        <ListDocuments />
       </div>
     </div>
   );

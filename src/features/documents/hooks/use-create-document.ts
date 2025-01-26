@@ -1,11 +1,6 @@
-import { documents } from "@/db/schema";
-import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { useState } from "react";
 import { mutate } from "swr";
-
-type CreateDocumentData = InferInsertModel<typeof documents>;
-
-type DocumentData = InferSelectModel<typeof documents>;
+import { CreateDocumentData, DocumentData } from "../types";
 
 type Options = {
   onSuccess?: (data: DocumentData) => void;
